@@ -36,8 +36,7 @@ function getServiceAccount() {
     return null;
   }
 
-  const normalized = rawValue.replace(/\\n/g, "\n");
-  const parsed = JSON.parse(normalized);
+  const parsed = JSON.parse(rawValue);
 
   if (typeof parsed.private_key === "string") {
     parsed.private_key = parsed.private_key.replace(/\\n/g, "\n");
