@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario de Lealtad</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="card">
+        <div class="card__content">
+          <span class="eyebrow">Registro de clientes</span>
+          <h1>Formulario de Tarjeta de Lealtad NEXUS </h1>
+          <p class="intro">
+            Completa tus datos para registrarte. Una vez registrado, podrás disfrutar de beneficios exclusivos y acumular puntos con cada compra.
+          </p>
+
+          <form id="loyaltyForm" class="form" novalidate>
+            <div class="form__grid">
+              <label class="field">
+                <span>Nombre</span>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  placeholder="Ingresa tu nombre"
+                  autocomplete="given-name"
+                  required
+                />
+              </label>
+
+              <label class="field">
+                <span>Apellido</span>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  placeholder="Ingresa tu apellido"
+                  autocomplete="family-name"
+                  required
+                />
+              </label>
+
+              <label class="field field--full">
+                <span>Cédula de Identidad</span>
+                <input
+                  type="text"
+                  id="idNumber"
+                  name="idNumber"
+                  placeholder="Ej: V-12345678"
+                  autocomplete="off"
+                  required
+                />
+              </label>
+
+              <label class="field">
+                <span>Correo electrónico</span>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="correo@ejemplo.com"
+                  autocomplete="email"
+                  required
+                />
+              </label>
+
+              <label class="field">
+                <span>Teléfono</span>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="Ej: +58 412 1234567"
+                  autocomplete="tel"
+                  required
+                />
+              </label>
+            </div>
+
+            <div class="form__footer">
+              <p class="hint">
+                Mientras Firebase no esté configurado, los envíos se guardarán temporalmente
+                en este navegador.
+              </p>
+              <button type="submit" class="submit-button">Guardar registro</button>
+            </div>
+
+            <p id="formMessage" class="message" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
