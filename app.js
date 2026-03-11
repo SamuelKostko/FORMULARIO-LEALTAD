@@ -1,17 +1,8 @@
-import { firebaseCollection, getFirebaseConfig } from "./firebase-config.js";
+import { localStorageKey, submitFormEndpoint } from "./firebase-config.js";
 
 const form = document.querySelector("#loyaltyForm");
 const submitButton = form.querySelector("button[type='submit']");
 const messageBox = document.querySelector("#formMessage");
-
-const REQUIRED_FIREBASE_KEYS = [
-  "apiKey",
-  "authDomain",
-  "projectId",
-  "storageBucket",
-  "messagingSenderId",
-  "appId",
-];
 
 function showMessage(text, type = "success") {
   messageBox.textContent = text;
@@ -21,15 +12,6 @@ function showMessage(text, type = "success") {
 function clearMessage() {
   messageBox.textContent = "";
   messageBox.className = "message";
-}
-
-async function isFirebaseConfigured() {
-  const firebaseConfig = await getFirebaseConfig();
-
-  return REQUIRED_FIREBASE_KEYS.every((key) => {
-    const value = firebaseConfig[key];
-    return typeof value === "string" && value.trim() !== "";
-  });
 }
 
 function normalizeFormData(formData) {
@@ -62,47 +44,33 @@ function validateData(data) {
 }
 
 function saveLocally(data) {
-  const storageKey = "loyalty-form-submissions";
-  const previousEntries = JSON.parse(localStorage.getItem(storageKey) ?? "[]");
+  const previousEntries = JSON.parse(localStorage.getItem(localStorageKey) ?? "[]");
   previousEntries.push({
     ...data,
     savedAt: new Date().toISOString(),
     pendingFirebaseSync: true,
   });
 
-  localStorage.setItem(storageKey, JSON.stringify(previousEntries));
+  localStorage.setItem(localStorageKey, JSON.stringify(previousEntries));
 }
 
-let firebaseDbPromise;
+async function saveToApi(data) {
+  const response = await fetch(submitFormEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-async function getFirestoreDb() {
-  if (!firebaseDbPromise) {
-    firebaseDbPromise = (async () => {
-      const [{ initializeApp, getApps }, { getFirestore }] = await Promise.all([
-        import("https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js"),
-        import("https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js"),
-      ]);
+  const payload = await response.json().catch(() => ({}));
 
-      const firebaseConfig = await getFirebaseConfig();
-
-      const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
-      return getFirestore(app);
-    })();
+  if (!response.ok) {
+    throw new Error(payload.message ?? "No se pudo guardar la información.");
   }
 
-  return firebaseDbPromise;
-}
-
-async function saveToFirebase(data) {
-  const db = await getFirestoreDb();
-  const { addDoc, collection, serverTimestamp } = await import(
-    "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js"
-  );
-
-  await addDoc(collection(db, firebaseCollection), {
-    ...data,
-    createdAt: serverTimestamp(),
-  });
+  return payload;
 }
 
 form.addEventListener("submit", async (event) => {
@@ -121,24 +89,22 @@ form.addEventListener("submit", async (event) => {
   submitButton.textContent = "Guardando...";
 
   try {
-    if (await isFirebaseConfigured()) {
-      await saveToFirebase(data);
-      showMessage("Registro guardado correctamente en Firebase.", "success");
-    } else {
-      saveLocally(data);
-      showMessage(
-        "Registro guardado temporalmente en este navegador. Configura las variables de entorno en Vercel para guardar en Firebase.",
-        "warning"
-      );
-    }
-
+    await saveToApi(data);
+    showMessage("Registro guardado correctamente en Firebase.", "success");
     form.reset();
   } catch (error) {
     console.error(error);
-    showMessage(
-      "No se pudo guardar la información. Revisa la configuración de Firebase e inténtalo nuevamente.",
-      "error"
-    );
+
+    if (error.message === "FIREBASE_CONFIG_MISSING") {
+      saveLocally(data);
+      showMessage(
+        "Registro guardado temporalmente en este navegador. Cuando me compartas las credenciales, llenamos el .env y quedará conectado en Vercel.",
+        "warning"
+      );
+      form.reset();
+    } else {
+      showMessage(error.message, "error");
+    }
   } finally {
     submitButton.disabled = false;
     submitButton.textContent = "Guardar registro";
