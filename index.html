@@ -15,11 +15,57 @@
   <body>
     <main class="page-shell">
       <section class="card">
-        <div class="card__content">
-          <span class="eyebrow">Registro de clientes</span>
-          <h1>Formulario de Tarjeta de Lealtad NEXUS </h1>
+        <div class="card__glow card__glow--one"></div>
+        <div class="card__glow card__glow--two"></div>
+        <aside class="card__aside">
+          <div class="brand-lockup">
+            <img
+              src="assets/logo-nexus.png"
+              alt="NEXUS Corporation"
+              class="brand-lockup__logo"
+            />
+          </div>
+
+          <span class="eyebrow">Programa NEXUS</span>
+          <h1>Formulario de Tarjeta de Lealtad NEXUS</h1>
           <p class="intro">
-            Completa tus datos para registrarte. Una vez registrado, podrás disfrutar de beneficios exclusivos y acumular puntos con cada compra.
+            Registra tus datos en segundos y empieza a disfrutar de promociones,
+            beneficios exclusivos y una experiencia más personalizada.
+          </p>
+
+          <div class="benefits">
+            <article class="benefit">
+              <span class="benefit__icon">★</span>
+              <div>
+                <h2>Beneficios exclusivos</h2>
+                <p>Accede a descuentos y campañas especiales para clientes registrados.</p>
+              </div>
+            </article>
+
+            <article class="benefit">
+              <span class="benefit__icon">⚡</span>
+              <div>
+                <h2>Registro rápido</h2>
+                <p>Un formulario optimizado para móvil, tablet y escritorio.</p>
+              </div>
+            </article>
+
+            <article class="benefit">
+              <span class="benefit__icon">🔒</span>
+              <div>
+                <h2>Gestión segura</h2>
+                <p>La información se procesa para almacenarse de forma centralizada.</p>
+              </div>
+            </article>
+          </div>
+        </aside>
+
+        <div class="card__content">
+          <span class="section-kicker">Registro de clientes</span>
+          <h2 class="content-title">Completa tus datos</h2>
+          <p class="content-copy">
+            Una vez registrado, podrás disfrutar de beneficios exclusivos y acumular
+            puntos con cada compra.
           </p>
 
           <form id="loyaltyForm" class="form" novalidate>
@@ -87,8 +133,7 @@
 
             <div class="form__footer">
               <p class="hint">
-                Mientras Firebase no esté configurado, los envíos se guardarán temporalmente
-                en este navegador.
+                Completa todos los campos para finalizar tu registro correctamente.
               </p>
               <button type="submit" class="submit-button">Guardar registro</button>
             </div>
