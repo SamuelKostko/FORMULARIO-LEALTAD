@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --bg: #eef2ff;
   --bg-accent: #dbeafe;
   --surface: rgba(255, 255, 255, 0.78);
@@ -25,26 +25,27 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #020617;
-    --bg-accent: #0f172a;
-    --surface: rgba(15, 23, 42, 0.78);
-    --surface-strong: rgba(15, 23, 42, 0.92);
-    --surface-soft: rgba(30, 41, 59, 0.72);
-    --border: rgba(148, 163, 184, 0.18);
-    --text: #e2e8f0;
-    --text-soft: #cbd5e1;
-    --muted: #94a3b8;
-    --primary: #60a5fa;
-    --primary-dark: #3b82f6;
-    --primary-soft: rgba(96, 165, 250, 0.18);
-    --success-bg: rgba(34, 197, 94, 0.18);
-    --success-text: #86efac;
-    --warning-bg: rgba(245, 158, 11, 0.2);
-    --warning-text: #fde68a;
-    --error-bg: rgba(239, 68, 68, 0.18);
-    --error-text: #fca5a5;
-    --shadow: 0 30px 80px rgba(2, 6, 23, 0.54);
-    --shadow-soft: 0 18px 45px rgba(2, 6, 23, 0.42);
+    /* Forcing light mode colors so it's readable on the white background */
+    --bg: #eef2ff;
+    --bg-accent: #dbeafe;
+    --surface: rgba(255, 255, 255, 0.78);
+    --surface-strong: rgba(255, 255, 255, 0.92);
+    --surface-soft: rgba(248, 250, 252, 0.78);
+    --border: rgba(15, 23, 42, 0.1);
+    --text: #0f172a;
+    --text-soft: #334155;
+    --muted: #64748b;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-soft: rgba(37, 99, 235, 0.14);
+    --success-bg: rgba(34, 197, 94, 0.16);
+    --success-text: #166534;
+    --warning-bg: rgba(245, 158, 11, 0.18);
+    --warning-text: #92400e;
+    --error-bg: rgba(239, 68, 68, 0.16);
+    --error-text: #b91c1c;
+    --shadow: 0 30px 80px rgba(15, 23, 42, 0.16);
+    --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
   }
 }
 
@@ -60,10 +61,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(37, 99, 235, 0.24), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(99, 102, 241, 0.18), transparent 24%),
-    linear-gradient(135deg, var(--bg-accent) 0%, var(--bg) 52%, var(--bg-accent) 100%);
+  background: #ffffff;
   color: var(--text);
 }
 
@@ -82,11 +80,9 @@ body {
   width: min(1120px, 100%);
   display: grid;
   grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 1.05fr);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(24px);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   animation: card-rise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -94,8 +90,9 @@ body {
   position: absolute;
   border-radius: 999px;
   filter: blur(12px);
-  opacity: 0.8;
+  opacity: 0;
   z-index: -1;
+  display: none;
 }
 
 .card__glow--one {
@@ -117,10 +114,8 @@ body {
 .card__aside {
   position: relative;
   padding: 52px 44px;
-  background:
-    linear-gradient(180deg, rgba(37, 99, 235, 0.2), rgba(37, 99, 235, 0.02)),
-    var(--surface-soft);
-  border-right: 1px solid var(--border);
+  background: transparent;
+  border-right: none;
 }
 
 .card__content {
