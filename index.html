@@ -135,7 +135,7 @@
               <p class="hint">
                 Completa todos los campos para finalizar tu registro correctamente.
               </p>
-              <button type="submit" class="submit-button">Guardar registro</button>
+              <button type="submit" class="submit-button">Enviar registro</button>
             </div>
 
             <p id="formMessage" class="message" role="status" aria-live="polite"></p>
@@ -143,6 +143,23 @@
         </div>
       </section>
     </main>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmationModal" class="modal-overlay hidden">
+      <div class="modal-box">
+        <h3 class="modal-title">Confirma tus datos</h3>
+        <p class="modal-desc">Por favor, verifica que la información ingresada sea correcta antes de enviar.</p>
+        
+        <ul id="modalDataList" class="modal-data-list">
+          <!-- Los datos se inyectarán aquí dinámicamente -->
+        </ul>
+        
+        <div class="modal-actions">
+          <button type="button" id="btnCancelModal" class="btn-cancel">Editar</button>
+          <button type="button" id="btnConfirmModal" class="btn-confirm">Sí, enviar</button>
+        </div>
+      </div>
+    </div>
 
     <script type="module" src="app.js"></script>
   </body>
