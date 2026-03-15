@@ -173,10 +173,9 @@ module.exports = async (request, response) => {
     const cardRef = db.collection('cards').doc(token);
     const txRef = db.collection('transactions').doc(crypto.randomBytes(12).toString('base64url'));
 
-    // Generar enlace público para la tarjeta
-    // Nota: Asume que se despliega en un entorno como Vercel donde VERCEL_URL está disponible
-    const protocol = request.headers["x-forwarded-proto"] || "http";
-    const host = request.headers["host"] || process.env.VERCEL_URL || "localhost:3000";
+    // Generar enlace público para la tarjeta usando tu dominio específico
+    const protocol = "https";
+    const host = "lealtad-three.vercel.app";
     const linkPath = `/card/${token}`;
     const publicLink = `${protocol}://${host}${linkPath}`;
 
