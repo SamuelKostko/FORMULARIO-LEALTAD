@@ -10,6 +10,10 @@ const modalDataList = document.querySelector("#modalDataList");
 const btnCancelModal = document.querySelector("#btnCancelModal");
 const btnConfirmModal = document.querySelector("#btnConfirmModal");
 
+// Success Modal
+const successModal = document.querySelector("#successModal");
+const btnSuccessClose = document.querySelector("#btnSuccessClose");
+
 let pendingDataToSave = null;
 
 function showMessage(text, type = "success") {
@@ -129,18 +133,15 @@ btnConfirmModal.addEventListener("click", async () => {
 
   try {
     await saveToApi(data);
-    showMessage("¡Registro completado con éxito!", "success");
     form.reset();
+    successModal.classList.add("is-active");
   } catch (error) {
     console.error(error);
 
     if (error.message === "FIREBASE_CONFIG_MISSING") {
       saveLocally(data);
-      showMessage(
-        "¡Registro completado con éxito!",
-        "success"
-      );
       form.reset();
+      successModal.classList.add("is-active");
     } else {
       showMessage(error.message, "error");
     }
@@ -149,4 +150,9 @@ btnConfirmModal.addEventListener("click", async () => {
     submitButton.textContent = "Guardar registro";
     pendingDataToSave = null;
   }
+});
+
+// Cerrar modal de éxito
+btnSuccessClose.addEventListener("click", () => {
+  successModal.classList.remove("is-active");
 });
