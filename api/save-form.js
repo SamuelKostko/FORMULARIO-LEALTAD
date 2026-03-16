@@ -175,7 +175,7 @@ module.exports = async (request, response) => {
 
     // Generar enlace público para la tarjeta usando tu dominio específico
     const protocol = "https";
-    const host = "lealtad-three.vercel.app";
+    const host = "lealtad-production-0763.up.railway.app";
     const linkPath = `/card/${token}`;
     const publicLink = `${protocol}://${host}${linkPath}`;
 
