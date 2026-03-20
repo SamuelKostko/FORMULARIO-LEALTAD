@@ -175,7 +175,7 @@ module.exports = async (request, response) => {
 
     // Generar enlace público para la tarjeta usando tu dominio específico
     const protocol = "https";
-    const host = "nexuscard.up.railway.app";
+    const host = "nexuslealtad.com";
     const linkPath = `/card/${token}`;
     const publicLink = `${protocol}://${host}${linkPath}`;
 
