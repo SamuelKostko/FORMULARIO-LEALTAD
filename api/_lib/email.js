@@ -10,8 +10,11 @@ async function sendActivationEmail({ to, name, link }) {
     apiKey: process.env.MAILERSEND_API_KEY,
   });
 
+  // En la cuenta gratuita/trial de MailerSend, SÓLO puedes enviar a un subdominio específico o a tu propio correo verificado
+  const senderEmail = process.env.MAILERSEND_SENDER_EMAIL || "MS_Lw3r9L@nexuslealtad.com";
+  
   const sentFrom = new Sender(
-    process.env.MAILERSEND_SENDER_EMAIL || "no-reply@nexuslealtad.com",
+    senderEmail,
     "Programa NEXUS"
   );
   
