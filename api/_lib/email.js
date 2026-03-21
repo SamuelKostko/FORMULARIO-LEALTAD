@@ -1,30 +1,23 @@
-const nodemailer = require("nodemailer");
-
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number(process.env.SMTP_PORT) || 465,
-    secure: Number(process.env.SMTP_PORT) === 465, // true for 465, false for other ports
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
+const { MailerSend, EmailParams, Sender, Recipient } = require("mailersend");
 
 async function sendActivationEmail({ to, name, link }) {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.warn("Faltan credenciales SMTP (SMTP_USER / SMTP_PASS). Saltando envío de correo.");
+  if (!process.env.MAILERSEND_API_KEY) {
+    console.warn("Falta token de MailerSend (MAILERSEND_API_KEY). Saltando envío de correo.");
     return null;
   }
 
-  const transporter = createTransporter();
+  const mailerSend = new MailerSend({
+    apiKey: process.env.MAILERSEND_API_KEY,
+  });
 
-  const mailOptions = {
-    from: `"Programa NEXUS" <${process.env.SMTP_USER}>`,
-    to: to,
-    subject: "¡Bienvenido/a! Activa tu tarjeta de Lealtad NEXUS",
-    html: `
+  const sentFrom = new Sender(
+    process.env.MAILERSEND_SENDER_EMAIL || "no-reply@nexuslealtad.com",
+    "Programa NEXUS"
+  );
+  
+  const recipients = [new Recipient(to, name)];
+
+  const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;">
         <!-- Header -->
         <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 40px 20px; text-align: center;">
@@ -62,12 +55,22 @@ async function sendActivationEmail({ to, name, link }) {
           </p>
         </div>
       </div>
-    `,
-  };
+    `;
 
-  const info = await transporter.sendMail(mailOptions);
-  console.log("Correo enviado: %s", info.messageId);
-  return info;
+  const emailParams = new EmailParams()
+    .setFrom(sentFrom)
+    .setTo(recipients)
+    .setSubject("¡Bienvenido/a! Activa tu tarjeta de Lealtad NEXUS")
+    .setHtml(htmlContent);
+
+  try {
+    const response = await mailerSend.email.send(emailParams);
+    console.log("Correo enviado via MailerSend. Estado:", response.statusCode);
+    return response;
+  } catch (error) {
+    console.error("Error al enviar con MailerSend:", error);
+    return null;
+  }
 }
 
 module.exports = {
