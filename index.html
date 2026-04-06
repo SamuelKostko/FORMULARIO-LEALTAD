@@ -1,178 +1,152 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formulario de Lealtad</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="page-shell">
-      <section class="card">
-        <div class="card__glow card__glow--one"></div>
-        <div class="card__glow card__glow--two"></div>
-        <aside class="card__aside">
-          <div class="brand-lockup">
-            <img
-              src="assets/logo-nexus.png"
-              alt="NEXUS Corporation"
-              class="brand-lockup__logo"
-            />
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulario de Lealtad</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <main class="page-shell">
+    <section class="card">
+      <div class="card__glow card__glow--one"></div>
+      <div class="card__glow card__glow--two"></div>
+      <aside class="card__aside">
+        <div class="brand-lockup">
+          <img src="assets/logo-nexus.webp" alt="NEXUS Corporation" class="brand-lockup__logo" />
+          <div class="associated-brands">
+            <img src="assets/logo-china-shopping.webp" alt="China Shopping" class="brand-logo--small" />
+            <img src="assets/logo-publik.webp" alt="Publi!K" class="brand-logo--small" />
+            <img src="assets/logo-zumaque.webp" alt="Zumaque" class="brand-logo--small" />
+            <img src="assets/logo-indulsa.webp" alt="Indulsa" class="brand-logo--small" />
+            <img src="assets/logo-proquimicos.webp" alt="Proquímicos" class="brand-logo--small" />
+            <img src="assets/logo-motors.webp" alt="Motors" class="brand-logo--small" />
           </div>
-
-          <span class="eyebrow">Programa NEXUS</span>
-          <h1>Formulario de Tarjeta de Lealtad NEXUS</h1>
-          <p class="intro">
-            Registra tus datos en segundos y empieza a disfrutar de promociones,
-            beneficios exclusivos y una experiencia más personalizada.
-          </p>
-
-          <div class="benefits">
-            <article class="benefit">
-              <span class="benefit__icon">★</span>
-              <div>
-                <h2>Beneficios exclusivos</h2>
-                <p>Accede a descuentos y campañas especiales para clientes registrados.</p>
-              </div>
-            </article>
-
-            <article class="benefit">
-              <span class="benefit__icon">⚡</span>
-              <div>
-                <h2>Registro rápido</h2>
-                <p>Un formulario optimizado para móvil, tablet y escritorio.</p>
-              </div>
-            </article>
-
-            <article class="benefit">
-              <span class="benefit__icon">🔒</span>
-              <div>
-                <h2>Gestión segura</h2>
-                <p>La información se procesa para almacenarse de forma centralizada.</p>
-              </div>
-            </article>
-          </div>
-        </aside>
-
-        <div class="card__content">
-          <span class="section-kicker">Registro de clientes</span>
-          <h2 class="content-title">Completa tus datos</h2>
-          <p class="content-copy">
-            Una vez registrado, podrás disfrutar de beneficios exclusivos y acumular
-            puntos con cada compra.
-          </p>
-
-          <form id="loyaltyForm" class="form" novalidate>
-            <div class="form__grid">
-              <label class="field">
-                <span>Nombre</span>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  placeholder="Ingresa tu nombre"
-                  autocomplete="given-name"
-                  required
-                />
-              </label>
-
-              <label class="field">
-                <span>Apellido</span>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  placeholder="Ingresa tu apellido"
-                  autocomplete="family-name"
-                  required
-                />
-              </label>
-
-              <label class="field field--full">
-                <span>Cédula de Identidad</span>
-                <input
-                  type="text"
-                  id="idNumber"
-                  name="idNumber"
-                  placeholder="Ej: V-12345678"
-                  autocomplete="off"
-                  required
-                />
-              </label>
-
-              <label class="field">
-                <span>Correo electrónico</span>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="correo@ejemplo.com"
-                  autocomplete="email"
-                  required
-                />
-              </label>
-
-              <label class="field">
-                <span>Teléfono</span>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  placeholder="Ej: +58 412 1234567"
-                  autocomplete="tel"
-                  required
-                />
-              </label>
-            </div>
-
-            <div class="form__footer">
-              <p class="hint">
-                Completa todos los campos para finalizar tu registro correctamente.
-              </p>
-              <button type="submit" class="submit-button">Enviar registro</button>
-            </div>
-
-            <p id="formMessage" class="message" role="status" aria-live="polite"></p>
-          </form>
         </div>
-      </section>
-    </main>
 
-    <!-- Modal de Confirmación -->
-    <div id="confirmationModal" class="modal-overlay hidden">
-      <div class="modal-box">
-        <h3 class="modal-title">Confirma tus datos</h3>
-        <p class="modal-desc">Por favor, verifica que la información ingresada sea correcta antes de enviar.</p>
-        
-        <ul id="modalDataList" class="modal-data-list">
-          <!-- Los datos se inyectarán aquí dinámicamente -->
-        </ul>
-        
-        <div class="modal-actions">
-          <button type="button" id="btnCancelModal" class="btn-cancel">Editar</button>
-          <button type="button" id="btnConfirmModal" class="btn-confirm">Sí, enviar</button>
-        </div>
-      </div>
-    </div>
-    <!-- Modal de Éxito -->
-    <div id="successModal" class="modal-overlay hidden">
-      <div class="modal-box modal-box--center">
-        <div class="success-icon">✓</div>
-        <h3 class="modal-title">¡Registro exitoso!</h3>
-        <p class="modal-desc">
-          Hemos creado tu registro de cliente con éxito. Por favor, <strong>revisa tu correo electrónico</strong> para descargar y ver tu tarjeta virtual.
+        <span class="eyebrow">Programa NEXUS</span>
+        <h1>Formulario de Tarjeta de Lealtad NEXUS</h1>
+        <p class="intro">
+          Registra tus datos en segundos y empieza a disfrutar de promociones,
+          beneficios exclusivos y una experiencia más personalizada.
         </p>
-        <div class="modal-actions modal-actions--center">
-          <button type="button" id="btnSuccessClose" class="btn-confirm">¡Entendido!</button>
+
+        <div class="benefits">
+          <article class="benefit">
+            <span class="benefit__icon">★</span>
+            <div>
+              <h2>Beneficios exclusivos</h2>
+              <p>Accede a descuentos y campañas especiales para clientes registrados.</p>
+            </div>
+          </article>
+
+          <article class="benefit">
+            <span class="benefit__icon">⚡</span>
+            <div>
+              <h2>Registro rápido</h2>
+              <p>Un formulario optimizado para móvil, tablet y escritorio.</p>
+            </div>
+          </article>
+
+          <article class="benefit">
+            <span class="benefit__icon">🔒</span>
+            <div>
+              <h2>Gestión segura</h2>
+              <p>La información se procesa para almacenarse de forma centralizada.</p>
+            </div>
+          </article>
         </div>
+      </aside>
+
+      <div class="card__content">
+        <span class="section-kicker">Registro de clientes</span>
+        <h2 class="content-title">Completa tus datos</h2>
+        <p class="content-copy">
+          Una vez registrado, podrás disfrutar de beneficios exclusivos y acumular
+          puntos con cada compra.
+        </p>
+
+        <form id="loyaltyForm" class="form" novalidate>
+          <div class="form__grid">
+            <label class="field">
+              <span>Nombre</span>
+              <input type="text" id="firstName" name="firstName" placeholder="Ingresa tu nombre"
+                autocomplete="given-name" required />
+            </label>
+
+            <label class="field">
+              <span>Apellido</span>
+              <input type="text" id="lastName" name="lastName" placeholder="Ingresa tu apellido"
+                autocomplete="family-name" required />
+            </label>
+
+            <label class="field field--full">
+              <span>Cédula de Identidad</span>
+              <input type="text" id="idNumber" name="idNumber" placeholder="Ej: V-12345678" autocomplete="off"
+                required />
+            </label>
+
+            <label class="field">
+              <span>Correo electrónico</span>
+              <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" autocomplete="email"
+                required />
+            </label>
+
+            <label class="field">
+              <span>Teléfono</span>
+              <input type="tel" id="phone" name="phone" placeholder="Ej: +58 412 1234567" autocomplete="tel" required />
+            </label>
+          </div>
+
+          <div class="form__footer">
+            <p class="hint">
+              Completa todos los campos para finalizar tu registro correctamente.
+            </p>
+            <button type="submit" class="submit-button">Enviar registro</button>
+          </div>
+
+          <p id="formMessage" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal de Confirmación -->
+  <div id="confirmationModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 class="modal-title">Confirma tus datos</h3>
+      <p class="modal-desc">Por favor, verifica que la información ingresada sea correcta antes de enviar.</p>
+
+      <ul id="modalDataList" class="modal-data-list">
+        <!-- Los datos se inyectarán aquí dinámicamente -->
+      </ul>
+
+      <div class="modal-actions">
+        <button type="button" id="btnCancelModal" class="btn-cancel">Editar</button>
+        <button type="button" id="btnConfirmModal" class="btn-confirm">Sí, enviar</button>
       </div>
     </div>
-    <script type="module" src="app.js"></script>
-  </body>
+  </div>
+  <!-- Modal de Éxito -->
+  <div id="successModal" class="modal-overlay hidden">
+    <div class="modal-box modal-box--center">
+      <div class="success-icon">✓</div>
+      <h3 class="modal-title">¡Registro exitoso!</h3>
+      <p class="modal-desc">
+        Hemos creado tu registro de cliente con éxito. Por favor, <strong>revisa tu correo electrónico</strong> para
+        descargar y ver tu tarjeta virtual.
+      </p>
+      <div class="modal-actions modal-actions--center">
+        <button type="button" id="btnSuccessClose" class="btn-confirm">¡Entendido!</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+
 </html>

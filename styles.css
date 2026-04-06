@@ -125,8 +125,10 @@ body {
 
 .brand-lockup {
   display: flex;
-  align-items: center;
-  margin-bottom: 28px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 32px;
   animation: fade-slide-up 0.8s ease-out 0.08s both;
 }
 
@@ -136,6 +138,28 @@ body {
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 18px 30px rgba(15, 23, 42, 0.18));
+}
+
+.associated-brands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.brand-logo--small {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.6;
+  filter: grayscale(1) brightness(1.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.brand-logo--small:hover {
+  opacity: 1;
+  filter: grayscale(0) brightness(1);
+  transform: translateY(-2px) scale(1.05);
 }
 
 .eyebrow {
@@ -444,8 +468,13 @@ h1 {
   }
 
   .brand-lockup {
-    justify-content: center;
+    align-items: center;
     margin-bottom: 22px;
+  }
+  
+  .associated-brands {
+    justify-content: center;
+    gap: 16px;
   }
 
   .brand-lockup__logo {
