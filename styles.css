@@ -135,7 +135,7 @@ body {
 
 .brand-lockup__logo {
   display: block;
-  width: min(100%, 480px);
+  width: min(100%, 700px);
   height: auto;
   aspect-ratio: 9 / 2;
   object-fit: contain;
@@ -453,7 +453,7 @@ h1 {
   }
 
   .brand-lockup__logo {
-    width: min(100%, 320px);
+    width: min(100%, 540px);
   }
 }
 
@@ -482,7 +482,7 @@ h1 {
   }
 
   .brand-lockup__logo {
-    width: min(100%, 260px);
+    width: min(100%, 420px);
   }
 
   .form__grid {
