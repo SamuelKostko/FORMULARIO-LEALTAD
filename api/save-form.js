@@ -64,12 +64,17 @@ function getFirestore() {
 }
 
 function validatePayload(payload) {
-  const requiredFields = ["firstName", "lastName", "idNumber", "email", "phone"];
+  const requiredFields = ["firstName", "lastName", "idNumber", "email", "phone", "birthDate"];
 
   for (const field of requiredFields) {
     if (typeof payload[field] !== "string" || payload[field].trim() === "") {
       return "Todos los campos son obligatorios.";
     }
+  }
+
+  // Validar formato de fecha de nacimiento (YYYY-MM-DD)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(payload.birthDate)) {
+    return "La fecha de nacimiento es inválida.";
   }
 
   return null;
@@ -181,25 +186,26 @@ module.exports = async (request, response) => {
 
     // Usar transaction/batch para guardar todo atómicamente
     const batch = db.batch();
-    
+
     // El cliente (antes db.collection(collectionName).add...)
     batch.set(customerRef, {
       nombre: name,
       idNumber: idNumber,
       email: email,
       phone: payload.phone.trim(),
+      birthDate: payload.birthDate,
       token: token,
       updatedAt: nowIso,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     // La tarjeta
-    batch.set(cardRef, { 
-      name, 
-      cedula: idNumber, 
-      balance: 0, 
+    batch.set(cardRef, {
+      name,
+      cedula: idNumber,
+      balance: 0,
       customerEmail: email,
-      updatedAt: nowIso 
+      updatedAt: nowIso
     }, { merge: true });
 
     // La transacción inicial
@@ -219,10 +225,10 @@ module.exports = async (request, response) => {
 
     // Intentar enviar el correo de activación
     try {
-      await sendActivationEmail({ 
-        to: email, 
-        name: name, 
-        link: publicLink 
+      await sendActivationEmail({
+        to: email,
+        name: name,
+        link: publicLink
       });
     } catch (emailError) {
       console.error("Error al enviar el correo de activación:", emailError);

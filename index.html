@@ -26,6 +26,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- Flatpickr (Datepicker) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+  
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -109,6 +113,11 @@
                 required />
             </label>
 
+            <label class="field field--full">
+              <span>Fecha de Nacimiento</span>
+              <input type="date" id="birthDate" name="birthDate" required />
+            </label>
+
             <label class="field">
               <span>Correo electrónico</span>
               <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" autocomplete="email"
@@ -164,6 +173,11 @@
       </div>
     </div>
   </div>
+
+  <!-- Flatpickr (Datepicker) script y locale -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/l10n/es.min.js"></script>
+
   <script type="module" src="app.js"></script>
 </body>
 

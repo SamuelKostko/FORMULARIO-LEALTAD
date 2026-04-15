@@ -1,5 +1,15 @@
 import { localStorageKey, submitFormEndpoint } from "./firebase-config.js";
 
+// Initialize Flatpickr
+flatpickr("#birthDate", {
+  locale: "es",
+  dateFormat: "Y-m-d", // standard date format for database
+  altInput: true,
+  altFormat: "j \\de F, Y", // more user-friendly: 15 de abril, 1990
+  maxDate: "today",
+  disableMobile: "true" // force aesthetic view on mobile too
+});
+
 const form = document.querySelector("#loyaltyForm");
 const submitButton = form.querySelector("button[type='submit']");
 const messageBox = document.querySelector("#formMessage");
@@ -33,6 +43,7 @@ function normalizeFormData(formData) {
     idNumber: formData.get("idNumber")?.toString().trim() ?? "",
     email: formData.get("email")?.toString().trim().toLowerCase() ?? "",
     phone: formData.get("phone")?.toString().trim() ?? "",
+    birthDate: formData.get("birthDate")?.toString().trim() ?? "",
   };
 }
 
@@ -54,6 +65,10 @@ function validateData(data) {
     return "Ingresa un número de teléfono válido.";
   }
 
+  if (!data.birthDate) {
+    return "La fecha de nacimiento es obligatoria.";
+  }
+
   return null;
 }
 
@@ -64,6 +79,7 @@ function saveLocally(data) {
     idNumber: data.idNumber.replace(/\D/g, ""),
     email: data.email,
     phone: data.phone,
+    birthDate: data.birthDate,
     savedAt: new Date().toISOString(),
     pendingFirebaseSync: true,
   });
@@ -104,13 +120,14 @@ form.addEventListener("submit", async (event) => {
 
   // Preparamos la data temporal y abrimos el modal
   const formattedIdNumber = data.idNumber.replace(/\D/g, "");
-  
+
   pendingDataToSave = data;
   modalDataList.innerHTML = `
     <li><span>Nombre completo:</span> <span>${data.firstName} ${data.lastName}</span></li>
     <li><span>Cédula:</span> <span>${formattedIdNumber}</span></li>
     <li><span>Correo electrónico:</span> <span>${data.email}</span></li>
     <li><span>Teléfono:</span> <span>${data.phone}</span></li>
+    <li><span>Fecha de nacimiento:</span> <span>${data.birthDate}</span></li>
   `;
   modalOverlay.classList.add("is-active");
 });
@@ -127,7 +144,7 @@ btnConfirmModal.addEventListener("click", async () => {
   if (!pendingDataToSave) return;
 
   const data = pendingDataToSave;
-  
+
   submitButton.disabled = true;
   submitButton.textContent = "Guardando...";
 
