@@ -54,6 +54,10 @@
   box-sizing: border-box;
 }
 
+.is-hidden {
+  display: none !important;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -305,7 +309,8 @@ h1 {
   color: var(--text-soft);
 }
 
-.field input {
+.field input,
+.field select {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -321,7 +326,8 @@ h1 {
   color: var(--muted);
 }
 
-.field input:focus {
+.field input:focus,
+.field select:focus {
   outline: none;
   border-color: color-mix(in srgb, var(--primary) 80%, white 20%);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 20%, transparent 80%);

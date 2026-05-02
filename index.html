@@ -128,6 +128,41 @@
               <span>Teléfono</span>
               <input type="tel" id="phone" name="phone" placeholder="Ej: +58 412 1234567" autocomplete="tel" required />
             </label>
+
+            <label class="field field--full">
+              <span>Sede</span>
+              <select id="sede" name="sede" required>
+                <option value="" selected disabled>Selecciona la sede</option>
+                <option value="NO ESTOY EN UNA SEDE">NO ESTOY EN UNA SEDE</option>
+                <option value="PROQUIMICOS DEL ZULIA">PROQUIMICOS DEL ZULIA</option>
+                <option value="PROQUIMICOS SUCURSAL LA H">PROQUIMICOS SUCURSAL LA H</option>
+                <option value="PROQUIMICOS LA CHILE">PROQUIMICOS LA CHILE</option>
+                <option value="PROQUIMICOS ALIADOS">PROQUIMICOS ALIADOS</option>
+                <option value="RUTAS MOVIL">RUTAS MOVIL</option>
+                <option value="RUTA MOVIL OJEDA">RUTA MOVIL OJEDA</option>
+                <option value="PROQUIMICOS DELICIAS">PROQUIMICOS DELICIAS</option>
+                <option value="PROQUIMICOS DE OCCIDENTE">PROQUIMICOS DE OCCIDENTE</option>
+                <option value="PROQUIMICOS LA L">PROQUIMICOS LA L</option>
+                <option value="PROQUIMICOS CALLE TRUJILLO">PROQUIMICOS CALLE TRUJILLO</option>
+                <option value="PROQUIMICOS DABAJURO">PROQUIMICOS DABAJURO</option>
+                <option value="PROQUIMICOS PUNTO FIJO">PROQUIMICOS PUNTO FIJO</option>
+                <option value="PROQUIMICOS CARORA">PROQUIMICOS CARORA</option>
+                <option value="PROQUIMICOS VALERA">PROQUIMICOS VALERA</option>
+                <option value="PROQUIMICOS BOCONO">PROQUIMICOS BOCONO</option>
+                <option value="PROQUIMICOS SABANA MENDOZA">PROQUIMICOS SABANA MENDOZA</option>
+                <option value="NEXUS MOTORS">NEXUS MOTORS</option>
+                <option value="INDULSA PRINCIPAL">INDULSA PRINCIPAL</option>
+                <option value="INDULSA CALLE TRUJILLO">INDULSA CALLE TRUJILLO</option>
+                <option value="CHINA SHOPPING">CHINA SHOPPING</option>
+                <option value="PUBLIK">PUBLIK</option>
+                <option value="OTROS">OTROS</option>
+              </select>
+            </label>
+
+            <label class="field field--full is-hidden" id="sedeOtherField">
+              <span>Indica la sede</span>
+              <input type="text" id="sedeOther" name="sedeOther" placeholder="Escribe la sede donde te estás registrando" autocomplete="off" />
+            </label>
           </div>
 
           <div class="form__footer">

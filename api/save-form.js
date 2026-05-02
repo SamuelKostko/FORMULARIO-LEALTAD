@@ -64,7 +64,7 @@ function getFirestore() {
 }
 
 function validatePayload(payload) {
-  const requiredFields = ["firstName", "lastName", "idNumber", "email", "phone", "birthDate"];
+  const requiredFields = ["firstName", "lastName", "idNumber", "email", "phone", "birthDate", "sede"];
 
   for (const field of requiredFields) {
     if (typeof payload[field] !== "string" || payload[field].trim() === "") {
@@ -157,6 +157,7 @@ module.exports = async (request, response) => {
     const email = payload.email.trim().toLowerCase();
     const idNumber = payload.idNumber.replace(/\D/g, "");
     const name = `${payload.firstName.trim()} ${payload.lastName.trim()}`;
+    const sede = payload.sede.trim();
 
     // 2. Avoid duplicates
     // Revisar si ya existe el correo en 'customers' (clientes)
@@ -194,6 +195,7 @@ module.exports = async (request, response) => {
       email: email,
       phone: payload.phone.trim(),
       birthDate: payload.birthDate,
+      sede,
       token: token,
       updatedAt: nowIso,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
