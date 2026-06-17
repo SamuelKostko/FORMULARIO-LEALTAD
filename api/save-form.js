@@ -104,7 +104,7 @@ async function verifyEmailWithMailerSend(email) {
   }
 
   const data = await response.json();
-  const status = data.data?.status;
+  const status = data.status || data.data?.status;
 
   // Estados posibles según MailerSend: valid, catch_all, disposable, unknown, invalid.
   // Permitiendo 'valid', 'catch_all' y 'unknown'. Rechazando 'disposable' y 'invalid'.
