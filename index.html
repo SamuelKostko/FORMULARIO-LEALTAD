@@ -31,6 +31,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
   
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Cloudflare Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 
 <body>
@@ -163,6 +166,9 @@
               <span>Indica la sede</span>
               <input type="text" id="sedeOther" name="sedeOther" placeholder="Escribe la sede donde te estás registrando" autocomplete="off" />
             </label>
+
+            <!-- Turnstile Widget -->
+            <div class="cf-turnstile field--full" data-sitekey="0x4AAAAAADmqFuR1vwrccn-R" style="margin-top: 1rem;"></div>
           </div>
 
           <div class="form__footer">

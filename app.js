@@ -50,6 +50,7 @@ function normalizeFormData(formData) {
     birthDate: formData.get("birthDate")?.toString().trim() ?? "",
     sede: formData.get("sede")?.toString().trim() ?? "",
     sedeOther: formData.get("sedeOther")?.toString().trim() ?? "",
+    cfTurnstileResponse: formData.get("cf-turnstile-response")?.toString().trim() ?? "",
   };
 }
 
@@ -95,6 +96,10 @@ function validateData(data) {
 
   if (!data.birthDate) {
     return "La fecha de nacimiento es obligatoria.";
+  }
+
+  if (!data.cfTurnstileResponse) {
+    return "Por favor, completa la verificación de seguridad (CAPTCHA).";
   }
 
   return null;
@@ -199,6 +204,9 @@ btnConfirmModal.addEventListener("click", async () => {
   try {
     await saveToApi(data);
     form.reset();
+    if (window.turnstile) {
+      turnstile.reset();
+    }
     successModal.classList.add("is-active");
   } catch (error) {
     console.error(error);
@@ -206,9 +214,15 @@ btnConfirmModal.addEventListener("click", async () => {
     if (error.message === "FIREBASE_CONFIG_MISSING") {
       saveLocally(data);
       form.reset();
+      if (window.turnstile) {
+        turnstile.reset();
+      }
       successModal.classList.add("is-active");
     } else {
       showMessage(error.message, "error");
+      if (window.turnstile) {
+        turnstile.reset();
+      }
     }
   } finally {
     submitButton.disabled = false;

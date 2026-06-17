@@ -63,6 +63,58 @@ function getFirestore() {
   return admin.firestore();
 }
 
+async function verifyTurnstile(token, ip) {
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+  if (!secretKey) throw new Error("Falta configurar TURNSTILE_SECRET_KEY");
+  
+  const formData = new URLSearchParams();
+  formData.append('secret', secretKey);
+  formData.append('response', token);
+  if (ip && ip !== 'unknown') {
+    formData.append('remoteip', ip);
+  }
+
+  const result = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    body: formData
+  });
+
+  const outcome = await result.json();
+  return outcome.success;
+}
+
+async function verifyEmailWithMailerSend(email) {
+  const token = process.env.MAILERSEND_API_KEY;
+  if (!token) throw new Error("Falta configurar MAILERSEND_API_KEY");
+
+  const response = await fetch("https://api.mailersend.com/v1/email-verification/verify", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({ email })
+  });
+
+  if (!response.ok) {
+    console.error("Error validando correo con MailerSend:", await response.text());
+    // Si la API falla por alguna razón externa o de tokens, la pasamos por defecto para no bloquear registros por error.
+    return { isValid: true };
+  }
+
+  const data = await response.json();
+  const status = data.data?.status;
+
+  // Estados posibles según MailerSend: valid, catch_all, disposable, unknown, invalid.
+  // Permitiendo 'valid', 'catch_all' y 'unknown'. Rechazando 'disposable' y 'invalid'.
+  if (status === "invalid" || status === "disposable" || status === "syntax_error" || status === "typo" || status === "mailbox_not_found" || status === "mailbox_blocked") {
+    return { isValid: false, reason: "El correo proporcionado no es válido o es desechable." };
+  }
+
+  return { isValid: true };
+}
+
 function validatePayload(payload) {
   const requiredFields = ["firstName", "lastName", "idNumber", "email", "phone", "birthDate", "sede"];
 
@@ -144,6 +196,10 @@ module.exports = async (request, response) => {
       return response.status(400).json({ message: validationError });
     }
 
+    if (!payload.cfTurnstileResponse) {
+      return response.status(400).json({ message: "El CAPTCHA es obligatorio." });
+    }
+
     const db = getFirestore();
     const collectionName = getCollectionName(); // clientes
 
@@ -154,7 +210,20 @@ module.exports = async (request, response) => {
       return response.status(429).json({ message: rl.error });
     }
 
+    // Verificar Turnstile
+    const isCaptchaValid = await verifyTurnstile(payload.cfTurnstileResponse, ip);
+    if (!isCaptchaValid) {
+      return response.status(400).json({ message: "La verificación de seguridad (CAPTCHA) falló. Intenta de nuevo." });
+    }
+
     const email = payload.email.trim().toLowerCase();
+
+    // Validar correo con MailerSend
+    const emailVerification = await verifyEmailWithMailerSend(email);
+    if (!emailVerification.isValid) {
+      return response.status(400).json({ message: emailVerification.reason || "El correo proporcionado no es válido." });
+    }
+
     const idNumber = payload.idNumber.replace(/\D/g, "");
     const name = `${payload.firstName.trim()} ${payload.lastName.trim()}`;
     const sede = payload.sede.trim();
