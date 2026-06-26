@@ -127,6 +127,11 @@
                 required />
             </label>
 
+            <!-- Honeypot field (oculto para humanos, los bots lo llenarán) -->
+            <label class="field" style="display:none !important;" aria-hidden="true">
+              <input type="text" id="emailConfirm" name="emailConfirm" tabindex="-1" autocomplete="off" />
+            </label>
+
             <label class="field">
               <span>Teléfono</span>
               <input type="tel" id="phone" name="phone" placeholder="Ej: +58 412 1234567" autocomplete="tel" required />
@@ -167,8 +172,8 @@
               <input type="text" id="sedeOther" name="sedeOther" placeholder="Escribe la sede donde te estás registrando" autocomplete="off" />
             </label>
 
-            <!-- Turnstile Widget -->
-            <div class="cf-turnstile field--full" data-sitekey="0x4AAAAAADmqFuR1vwrccn-R" style="margin-top: 1rem;"></div>
+            <!-- Cloudflare Turnstile Widget -->
+            <div class="cf-turnstile field--full" data-sitekey="TU_TURNSTILE_SITE_KEY" style="margin-top: 1rem;"></div>
           </div>
 
           <div class="form__footer">

@@ -99,8 +99,8 @@ async function verifyEmailWithMailerSend(email) {
 
   if (!response.ok) {
     console.error("Error validando correo con MailerSend:", await response.text());
-    // Si la API falla por alguna razón externa o de tokens, la pasamos por defecto para no bloquear registros por error.
-    return { isValid: true };
+    // Si la API falla, ya no la pasamos por defecto. Detenemos el registro para evitar bots.
+    return { isValid: false, reason: "No pudimos validar el correo en este momento. Por favor intenta de nuevo más tarde." };
   }
 
   const data = await response.json();
@@ -133,7 +133,7 @@ function validatePayload(payload) {
 }
 
 const RATE_WINDOW_MS = 15 * 60 * 1000;
-const RATE_MAX_ATTEMPTS = 8;
+const RATE_MAX_ATTEMPTS = 4; // Reducido de 8 a 4 para mitigar bots
 
 function getClientIp(req) {
   const xff = String(req.headers['x-forwarded-for'] ?? '').trim();
@@ -196,8 +196,14 @@ module.exports = async (request, response) => {
       return response.status(400).json({ message: validationError });
     }
 
-    if (!payload.cfTurnstileResponse) {
-      return response.status(400).json({ message: "El CAPTCHA es obligatorio." });
+    const tokenSecurity = payload.turnstileResponse;
+    if (!tokenSecurity) {
+      return response.status(400).json({ message: "La verificación de seguridad es obligatoria." });
+    }
+
+    // HONEYPOT: Si este campo viene con datos, es un bot.
+    if (payload.emailConfirm) {
+      return response.status(400).json({ message: "Registro inválido." });
     }
 
     const db = getFirestore();
@@ -211,24 +217,24 @@ module.exports = async (request, response) => {
     }
 
     // Verificar Turnstile
-    const isCaptchaValid = await verifyTurnstile(payload.cfTurnstileResponse, ip);
+    const isCaptchaValid = await verifyTurnstile(tokenSecurity, ip);
     if (!isCaptchaValid) {
-      return response.status(400).json({ message: "La verificación de seguridad (CAPTCHA) falló. Intenta de nuevo." });
+      return response.status(400).json({ message: "La verificación de seguridad (Turnstile) falló. Intenta de nuevo." });
     }
 
     const email = payload.email.trim().toLowerCase();
-
-    // Validar correo con MailerSend
-    const emailVerification = await verifyEmailWithMailerSend(email);
-    if (!emailVerification.isValid) {
-      return response.status(400).json({ message: emailVerification.reason || "El correo proporcionado no es válido." });
+    
+    // Validación regex básica de correo para evitar llamadas inútiles a la API
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return response.status(400).json({ message: "El formato del correo es inválido." });
     }
 
     const idNumber = payload.idNumber.replace(/\D/g, "");
     const name = `${payload.firstName.trim()} ${payload.lastName.trim()}`;
     const sede = payload.sede.trim();
 
-    // 2. Avoid duplicates
+    // 2. Avoid duplicates (hacer esto ANTES de MailerSend para ahorrar créditos)
     // Revisar si ya existe el correo en 'customers' (clientes)
     const customerRef = db.collection(collectionName).doc(email);
     const existingCustomer = await customerRef.get();
@@ -240,6 +246,12 @@ module.exports = async (request, response) => {
     const cedulaDup = await db.collection(collectionName).where('idNumber', '==', idNumber).limit(1).get();
     if (!cedulaDup.empty) {
       return response.status(409).json({ message: 'Esta cédula ya está registrada.' });
+    }
+
+    // 3. Validar correo con MailerSend (solo si superó las pruebas anteriores)
+    const emailVerification = await verifyEmailWithMailerSend(email);
+    if (!emailVerification.isValid) {
+      return response.status(400).json({ message: emailVerification.reason || "El correo proporcionado no es válido." });
     }
 
     const token = makeToken();

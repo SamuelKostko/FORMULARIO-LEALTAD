@@ -50,7 +50,8 @@ function normalizeFormData(formData) {
     birthDate: formData.get("birthDate")?.toString().trim() ?? "",
     sede: formData.get("sede")?.toString().trim() ?? "",
     sedeOther: formData.get("sedeOther")?.toString().trim() ?? "",
-    cfTurnstileResponse: formData.get("cf-turnstile-response")?.toString().trim() ?? "",
+    emailConfirm: formData.get("emailConfirm")?.toString().trim() ?? "",
+    turnstileResponse: formData.get("cf-turnstile-response")?.toString().trim() ?? "",
   };
 }
 
@@ -98,8 +99,8 @@ function validateData(data) {
     return "La fecha de nacimiento es obligatoria.";
   }
 
-  if (!data.cfTurnstileResponse) {
-    return "Por favor, completa la verificación de seguridad (CAPTCHA).";
+  if (!data.turnstileResponse) {
+    return "Por favor, completa la verificación de seguridad (Turnstile).";
   }
 
   return null;
