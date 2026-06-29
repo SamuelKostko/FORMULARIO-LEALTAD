@@ -132,8 +132,8 @@ function validatePayload(payload) {
   return null;
 }
 
-const RATE_WINDOW_MS = 15 * 60 * 1000;
-const RATE_MAX_ATTEMPTS = 4; // Reducido de 8 a 4 para mitigar bots
+const RATE_WINDOW_MS = 30 * 60 * 1000; // 30 minutos
+const RATE_MAX_ATTEMPTS = 4; // Límite de intentos antes de entrar a la blacklist
 
 function getClientIp(req) {
   const xff = String(req.headers['x-forwarded-for'] ?? '').trim();
@@ -149,17 +149,34 @@ function makeToken() {
   return crypto.randomBytes(16).toString("hex");
 }
 
+async function checkBlacklist(db, ip) {
+  if (!ip || ip === 'unknown') return false;
+  const key = hashKey(ip);
+  const doc = await db.collection('blacklisted_ips').doc(key).get();
+  return doc.exists;
+}
+
 async function consumeRateLimit(db, ip) {
   const now = Date.now();
   const bucket = Math.floor(now / RATE_WINDOW_MS);
   const key = hashKey(`${ip}:${bucket}`);
   const ref = db.collection('rate_limits').doc(`register:${key}`);
+  const blacklistRef = db.collection('blacklisted_ips').doc(hashKey(ip));
 
   try {
-    await db.runTransaction(async (tx) => {
+    const isExceeded = await db.runTransaction(async (tx) => {
       const snap = await tx.get(ref);
       const current = snap.exists ? Number(snap.data()?.count ?? 0) : 0;
-      if (current >= RATE_MAX_ATTEMPTS) throw new Error('RATE_LIMIT_EXCEEDED');
+      
+      if (current >= RATE_MAX_ATTEMPTS) {
+        // Bloquear IP de forma permanente
+        tx.set(blacklistRef, {
+          ip: ip,
+          reason: 'Rate limit exceeded (Too many registration attempts)',
+          createdAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        return true; // Excedido
+      }
 
       tx.set(
         ref,
@@ -170,11 +187,18 @@ async function consumeRateLimit(db, ip) {
         },
         { merge: true }
       );
+      
+      return false; // No excedido
     });
+    
+    if (isExceeded) {
+      throw new Error('RATE_LIMIT_EXCEEDED');
+    }
+    
     return { ok: true };
   } catch (err) {
     if (String(err?.message) === 'RATE_LIMIT_EXCEEDED') {
-      return { ok: false, error: 'Demasiados intentos. Intenta de nuevo en unos minutos.' };
+      return { ok: false, error: 'Actividad sospechosa detectada, comuníquese con soporte.' };
     }
     throw err;
   }
@@ -209,11 +233,19 @@ module.exports = async (request, response) => {
     const db = getFirestore();
     const collectionName = getCollectionName(); // clientes
 
-    // 1. Rate Limit
     const ip = getClientIp(request);
+    
+    // 1. Verificar Blacklist temprano
+    const isBlacklisted = await checkBlacklist(db, ip);
+    if (isBlacklisted) {
+      return response.status(403).json({ message: "Actividad sospechosa detectada, comuníquese con soporte." });
+    }
+
+    // 2. Rate Limit temporal (que inserta en blacklist si se supera)
     const rl = await consumeRateLimit(db, ip);
     if (!rl.ok) {
-      return response.status(429).json({ message: rl.error });
+      // Usamos 403 (Forbidden) ya que fue detectado como sospechoso
+      return response.status(403).json({ message: rl.error });
     }
 
     // Verificar Turnstile
