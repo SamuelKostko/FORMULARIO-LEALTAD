@@ -234,19 +234,6 @@ module.exports = async (request, response) => {
     const collectionName = getCollectionName(); // clientes
 
     const ip = getClientIp(request);
-    
-    // 1. Verificar Blacklist temprano
-    const isBlacklisted = await checkBlacklist(db, ip);
-    if (isBlacklisted) {
-      return response.status(403).json({ message: "Actividad sospechosa detectada, comuníquese con soporte." });
-    }
-
-    // 2. Rate Limit temporal (que inserta en blacklist si se supera)
-    const rl = await consumeRateLimit(db, ip);
-    if (!rl.ok) {
-      // Usamos 403 (Forbidden) ya que fue detectado como sospechoso
-      return response.status(403).json({ message: rl.error });
-    }
 
     // Verificar Turnstile
     const isCaptchaValid = await verifyTurnstile(tokenSecurity, ip);
