@@ -12,6 +12,18 @@ flatpickr("#birthDate", {
 
 const form = document.querySelector("#loyaltyForm");
 const submitButton = form.querySelector("button[type='submit']");
+const referralCodeInput = document.querySelector("#referralCode");
+
+// Prefill referral code from URL if present
+document.addEventListener("DOMContentLoaded", () => {
+  if (referralCodeInput) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const refParam = urlParams.get("ref");
+    if (refParam) {
+      referralCodeInput.value = refParam.toUpperCase();
+    }
+  }
+});
 const messageBox = document.querySelector("#formMessage");
 
 const sedeSelect = form.querySelector("#sede");
