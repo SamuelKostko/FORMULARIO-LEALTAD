@@ -1,6 +1,6 @@
 const admin = require("firebase-admin");
 const crypto = require("node:crypto");
-const { sendActivationEmail } = require("./_lib/email");
+const { sendActivationEmail, sendReferralNotificationEmail } = require("./_lib/email");
 
 const SERVICE_ACCOUNT_ENV_NAMES = [
   "FIREBASE_SERVICE_ACCOUNT_JSON",
@@ -267,6 +267,24 @@ module.exports = async (request, response) => {
       return response.status(409).json({ message: 'Esta cédula ya está registrada.' });
     }
 
+    // 2.5 Verificar código de referido si se proporcionó
+    let referrerToken = null;
+    let referrerEmail = null;
+    let referrerName = null;
+    if (payload.referralCode) {
+      const refCode = String(payload.referralCode).toUpperCase().trim();
+      const referrerSnap = await db.collection('cards').where('referralCode', '==', refCode).limit(1).get();
+      if (!referrerSnap.empty) {
+        const rData = referrerSnap.docs[0].data();
+        referrerToken = referrerSnap.docs[0].id;
+        referrerEmail = rData.customerEmail;
+        referrerName = rData.name;
+      } else {
+        // Código no válido. Puedes decidir rechazar el registro o simplemente ignorarlo.
+        return response.status(400).json({ message: 'El código de referido ingresado no es válido.' });
+      }
+    }
+
     // 3. Validar correo con MailerSend (solo si superó las pruebas anteriores)
     const emailVerification = await verifyEmailWithMailerSend(email);
     if (!emailVerification.isValid) {
@@ -302,13 +320,19 @@ module.exports = async (request, response) => {
     });
 
     // La tarjeta
-    batch.set(cardRef, {
+    const cardData = {
       name,
       cedula: idNumber,
       balance: 0,
       customerEmail: email,
-      updatedAt: nowIso
-    }, { merge: true });
+      updatedAt: nowIso,
+      referralCode: token.substring(0, 6).toUpperCase()
+    };
+    if (referrerToken) {
+      cardData.referredBy = referrerToken;
+      cardData.hasPaidFirstTime = false;
+    }
+    batch.set(cardRef, cardData, { merge: true });
 
     // La transacción inicial
     batch.set(txRef, {
@@ -335,6 +359,18 @@ module.exports = async (request, response) => {
     } catch (emailError) {
       console.error("Error al enviar el correo de activación:", emailError);
       // No bloqueamos la respuesta al cliente si el correo falla
+    }
+
+    if (referrerEmail && referrerName) {
+      try {
+        await sendReferralNotificationEmail({
+          to: referrerEmail,
+          referrerName: referrerName,
+          referredName: name
+        });
+      } catch (refError) {
+        console.error("Error al enviar notificación de referido:", refError);
+      }
     }
 
     return response.status(200).json({ ok: true, token, cardLink: publicLink });

@@ -52,6 +52,7 @@ function normalizeFormData(formData) {
     sedeOther: formData.get("sedeOther")?.toString().trim() ?? "",
     emailConfirm: formData.get("emailConfirm")?.toString().trim() ?? "",
     turnstileResponse: formData.get("cf-turnstile-response")?.toString().trim() ?? "",
+    referralCode: formData.get("referralCode")?.toString().trim().toUpperCase() ?? "",
   };
 }
 
@@ -182,6 +183,7 @@ form.addEventListener("submit", async (event) => {
     <li><span>Teléfono:</span> <span>${data.phone}</span></li>
     <li><span>Fecha de nacimiento:</span> <span>${data.birthDate}</span></li>
     <li><span>Sede:</span> <span>${resolvedSede}</span></li>
+    ${data.referralCode ? `<li><span>Cód. Referido:</span> <span>${data.referralCode}</span></li>` : ''}
   `;
   modalOverlay.classList.add("is-active");
 });

@@ -5,31 +5,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>V+ Puntos</title>
-  <meta name="description" content="Regístrate en el Programa V+ Puntos y empieza a acumular beneficios exclusivos, promociones personalizadas y recompensas en todas nuestras marcas asociadas." />
+  <meta name="description"
+    content="Regístrate en el Programa V+ Puntos y empieza a acumular beneficios exclusivos, promociones personalizadas y recompensas en todas nuestras marcas asociadas." />
   <link rel="canonical" href="https://vmaspuntos.com" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://vmaspuntos.com" />
   <meta property="og:title" content="V+ Puntos - Programa de Lealtad" />
-  <meta property="og:description" content="Regístrate y disfruta de beneficios exclusivos con nuestra tarjeta de lealtad digital." />
+  <meta property="og:description"
+    content="Regístrate y disfruta de beneficios exclusivos con nuestra tarjeta de lealtad digital." />
   <meta property="og:image" content="https://vmaspuntos.com/assets/icon.svg" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://vmaspuntos.com" />
   <meta property="twitter:title" content="V+ Puntos - Programa de Lealtad" />
-  <meta property="twitter:description" content="Regístrate y disfruta de beneficios exclusivos con nuestra tarjeta de lealtad digital." />
+  <meta property="twitter:description"
+    content="Regístrate y disfruta de beneficios exclusivos con nuestra tarjeta de lealtad digital." />
   <meta property="twitter:image" content="https://vmaspuntos.com/assets/icon.svg" />
 
   <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  
+
   <!-- Flatpickr (Datepicker) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
-  
+
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Cloudflare Turnstile -->
@@ -43,14 +46,21 @@
       <div class="card__glow card__glow--two"></div>
       <aside class="card__aside">
         <div class="brand-lockup">
-          <img src="assets/icon.svg" width="700" height="156" alt="V+ Puntos" class="brand-lockup__logo" fetchpriority="high" decoding="sync" />
+          <img src="assets/icon.svg" width="700" height="156" alt="V+ Puntos" class="brand-lockup__logo"
+            fetchpriority="high" decoding="sync" />
           <div class="associated-brands">
-            <img src="assets/logo-china-shopping.webp" alt="China Shopping" width="100" height="32" class="brand-logo--small" loading="lazy" decoding="async" />
-            <img src="assets/logo-publik.webp" alt="Publi!K" width="100" height="32" class="brand-logo--small" loading="lazy" decoding="async" />
-            <img src="assets/logo-zumaque.webp" alt="Zumaque" width="100" height="32" class="brand-logo--small" loading="lazy" decoding="async" />
-            <img src="assets/logo-indulsa.webp" alt="Indulsa" width="100" height="32" class="brand-logo--small" loading="lazy" decoding="async" />
-            <img src="assets/logo-proquimicos.webp" alt="Proquímicos" width="100" height="32" class="brand-logo--small" loading="lazy" decoding="async" />
-            <img src="assets/logo-motors.webp" alt="Motors" width="100" height="32" class="brand-logo--small" loading="lazy" decoding="async" />
+            <img src="assets/logo-china-shopping.webp" alt="China Shopping" width="100" height="32"
+              class="brand-logo--small" loading="lazy" decoding="async" />
+            <img src="assets/logo-publik.webp" alt="Publi!K" width="100" height="32" class="brand-logo--small"
+              loading="lazy" decoding="async" />
+            <img src="assets/logo-zumaque.webp" alt="Zumaque" width="100" height="32" class="brand-logo--small"
+              loading="lazy" decoding="async" />
+            <img src="assets/logo-indulsa.webp" alt="Indulsa" width="100" height="32" class="brand-logo--small"
+              loading="lazy" decoding="async" />
+            <img src="assets/logo-proquimicos.webp" alt="Proquímicos" width="100" height="32" class="brand-logo--small"
+              loading="lazy" decoding="async" />
+            <img src="assets/logo-motors.webp" alt="Motors" width="100" height="32" class="brand-logo--small"
+              loading="lazy" decoding="async" />
           </div>
         </div>
 
@@ -169,11 +179,19 @@
 
             <label class="field field--full is-hidden" id="sedeOtherField">
               <span>Indica la sede</span>
-              <input type="text" id="sedeOther" name="sedeOther" placeholder="Escribe la sede donde te estás registrando" autocomplete="off" />
+              <input type="text" id="sedeOther" name="sedeOther"
+                placeholder="Escribe la sede donde te estás registrando" autocomplete="off" />
+            </label>
+
+            <label class="field field--full">
+              <span>Código de referido (Opcional)</span>
+              <input type="text" id="referralCode" name="referralCode" placeholder="Ingresa el código"
+                autocomplete="off" maxlength="6" style="text-transform: uppercase;" />
             </label>
 
             <!-- Cloudflare Turnstile Widget -->
-            <div class="cf-turnstile field--full" data-sitekey="0x4AAAAAADmqFuR1vwrccn-R" style="margin-top: 1rem;"></div>
+            <div class="cf-turnstile field--full" data-sitekey="0x4AAAAAADmqFuR1vwrccn-R" style="margin-top: 1rem;">
+            </div>
           </div>
 
           <div class="form__footer">

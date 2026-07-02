@@ -73,6 +73,61 @@ async function sendActivationEmail({ to, name, link }) {
   }
 }
 
+async function sendReferralNotificationEmail({ to, referrerName, referredName }) {
+  if (!process.env.MAILERSEND_API_KEY) {
+    console.warn("Falta token de MailerSend (MAILERSEND_API_KEY). Saltando envío de correo de referido.");
+    return null;
+  }
+
+  const mailerSend = new MailerSend({
+    apiKey: process.env.MAILERSEND_API_KEY,
+  });
+
+  const sentFrom = new Sender(
+    process.env.MAILERSEND_SENDER_EMAIL,
+    "Programa V+ Puntos"
+  );
+  
+  const recipients = [new Recipient(to, referrerName)];
+
+  const htmlContent = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e5e7eb;">
+        <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 40px 20px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0; font-size: 32px; letter-spacing: 2px; font-weight: 800;">¡Nuevo Referido!</h1>
+        </div>
+        <div style="padding: 40px 30px; color: #374151; line-height: 1.6;">
+          <h2 style="color: #111827; margin-top: 0; font-size: 24px;">¡Hola, ${referrerName}!</h2>
+          <p style="font-size: 16px; margin-bottom: 24px;">¡Excelentes noticias! <strong>${referredName}</strong> se ha registrado exitosamente en el programa usando tu código de referido.</p>
+          <div style="background-color: #f0fdf4; border-left: 4px solid #22c55e; padding: 16px 20px; margin-bottom: 30px; border-radius: 0 8px 8px 0;">
+            <p style="margin: 0; font-size: 15px; color: #166534;">🎉 <strong>¡Atento a tu cuenta!</strong> La primera vez que ${referredName} pague con puntos, tú recibirás automáticamente un porcentaje de esa transacción como bonificación.</p>
+          </div>
+          <p style="font-size: 14px; color: #6b7280;">Sigue compartiendo tu código con más personas para obtener más recompensas.</p>
+        </div>
+        <div style="background-color: #f8fafc; padding: 24px 30px; text-align: center; border-top: 1px solid #f1f5f9;">
+          <p style="font-size: 12px; color: #94a3b8; margin: 0; line-height: 1.5;">
+            © ${new Date().getFullYear()} Programa V+ Puntos. Todos los derechos reservados.
+          </p>
+        </div>
+      </div>
+    `;
+
+  const emailParams = new EmailParams()
+    .setFrom(sentFrom)
+    .setTo(recipients)
+    .setSubject("¡Alguien se registró con tu código de referido!")
+    .setHtml(htmlContent);
+
+  try {
+    const response = await mailerSend.email.send(emailParams);
+    console.log("Correo de referido enviado via MailerSend. Estado:", response.statusCode);
+    return response;
+  } catch (error) {
+    console.error("Error al enviar con MailerSend:", error);
+    return null;
+  }
+}
+
 module.exports = {
   sendActivationEmail,
+  sendReferralNotificationEmail,
 };
