@@ -27,8 +27,6 @@ document.addEventListener("DOMContentLoaded", () => {
 const messageBox = document.querySelector("#formMessage");
 
 const sedeSelect = form.querySelector("#sede");
-const sedeOtherField = form.querySelector("#sedeOtherField");
-const sedeOtherInput = form.querySelector("#sedeOther");
 
 // Modal Elements
 const modalOverlay = document.querySelector("#confirmationModal");
@@ -61,7 +59,6 @@ function normalizeFormData(formData) {
     phone: formData.get("phone")?.toString().trim() ?? "",
     birthDate: formData.get("birthDate")?.toString().trim() ?? "",
     sede: formData.get("sede")?.toString().trim() ?? "",
-    sedeOther: formData.get("sedeOther")?.toString().trim() ?? "",
     emailConfirm: formData.get("emailConfirm")?.toString().trim() ?? "",
     turnstileResponse: formData.get("cf-turnstile-response")?.toString().trim() ?? "",
     referralCode: formData.get("referralCode")?.toString().trim().toUpperCase() ?? "",
@@ -119,18 +116,7 @@ function validateData(data) {
   return null;
 }
 
-function updateSedeOtherVisibility() {
-  const isOther = sedeSelect.value === "OTROS";
-  sedeOtherField.classList.toggle("is-hidden", !isOther);
-  sedeOtherInput.required = isOther;
 
-  if (!isOther) {
-    sedeOtherInput.value = "";
-  }
-}
-
-updateSedeOtherVisibility();
-sedeSelect.addEventListener("change", updateSedeOtherVisibility);
 
 function saveLocally(data) {
   const previousEntries = JSON.parse(localStorage.getItem(localStorageKey) ?? "[]");
